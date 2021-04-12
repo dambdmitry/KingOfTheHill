@@ -3,11 +3,12 @@ package edu.lab.controller.socket.communication.requests;
 import edu.lab.controller.socket.communication.Request;
 import edu.lab.controller.socket.communication.RequestCode;
 
+import java.nio.ByteBuffer;
+
 public class RegistryRequest extends Request {
-    private final Integer PASSWORD_BEGIN_INDEX = 1;
-    private final Integer PORT_BEGIN_INDEX = 9;
-    private final Integer FIO_BEGIN_INDEX = 11;
-    private String info;
+    private final Integer PASSWORD_BEGIN_INDEX = 0;
+    private final Integer PORT_BEGIN_INDEX = 8;
+    private final Integer FIO_BEGIN_INDEX = 10;
 
     public RegistryRequest(RequestCode code) {
         super(code);
@@ -15,7 +16,7 @@ public class RegistryRequest extends Request {
 
     public RegistryRequest(String info) {
         super(RequestCode.REGISTRY);
-        this.info = info;
+        super.info = info;
     }
 
 
@@ -34,10 +35,27 @@ public class RegistryRequest extends Request {
         String fio = split[2];
 
         createAndInsertBytesFromString(PASSWORD_BEGIN_INDEX, bytesInfo, password);
-        createAndInsertBytesFromString(PORT_BEGIN_INDEX, bytesInfo, port);
+        createAndInsertBytesForPort(PORT_BEGIN_INDEX, bytesInfo, port);
         createAndInsertBytesFromString(FIO_BEGIN_INDEX, bytesInfo, fio);
 
         return bytesInfo;
+    }
+
+    private void createAndInsertBytesForPort(Integer start, byte[] bytes, String port) {
+        Integer intPort = Integer.parseInt(port);
+        byte[] res = new byte[2];
+        ByteBuffer buf = ByteBuffer.allocate(Integer.BYTES);
+        buf.putInt(intPort);
+        for (byte b : buf.array()) {
+            if (b != 0){
+                if(res[0] == 0){
+                    res[0] = b;
+                }else{
+                    res[1] = b;
+                }
+            }
+        }
+        insert(start, res, bytes);
     }
 
     /*

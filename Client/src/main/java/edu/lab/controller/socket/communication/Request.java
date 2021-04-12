@@ -17,14 +17,15 @@ public abstract class Request {
     protected byte[] packet = new byte[MAX_BYTES_FOR_REQUEST]; // То что принимает сервер - массив байтов
     protected byte[] infoBytes = new byte[MAX_BYTES_FOR_REQUEST - 1]; //массив байтов с доп информацией
     protected byte requestCode; // код запроса к серверу (1 байт)
+    protected String info;
 
     public Request(RequestCode code) {
         this.requestCode = code.getCode();
         packet[0] = this.requestCode; // сразу присваиваем пакету тип его запроса
-        buildInfoBytes();
     }
 
     public byte[] getPacket(){
+        buildInfoBytes();
         Integer firstInfoIndex = 1;
         insert(firstInfoIndex, infoBytes, this.packet);
         return packet;
