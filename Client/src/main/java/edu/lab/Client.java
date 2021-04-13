@@ -16,6 +16,7 @@ public class Client {
     public static void main(String[] args) throws SocketException {
         ClientForIgor client = new ClientForIgorImpl();
         ServerForIgor server = new ServerForIgorImpl();
+        final Integer port = 2222;
         client.registry("valid cd;4444;Mitin Dmitry");
         server.receiveAgreement();
         server.receiveReady();
@@ -25,8 +26,8 @@ public class Client {
         ExecutorService exec = Executors.newFixedThreadPool(amount * 2);
 
         for(String ip : sacrifices){
-            exec.execute(new AboveAttacker(ip));
-            exec.execute(new BelowAttacker(ip));
+            exec.execute(new AboveAttacker(ip, port));
+            exec.execute(new BelowAttacker(ip, port));
         }
     }
 }
