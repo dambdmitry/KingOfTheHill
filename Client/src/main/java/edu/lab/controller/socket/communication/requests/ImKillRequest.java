@@ -3,15 +3,15 @@ package edu.lab.controller.socket.communication.requests;
 import edu.lab.controller.socket.communication.Request;
 import edu.lab.controller.socket.communication.RequestCode;
 
-public class DiedRequest extends Request {
+public class ImKillRequest extends Request {
     private String killerIp;
 
-    public DiedRequest(RequestCode code) {
+    public ImKillRequest(RequestCode code) {
         super(code);
     }
 
-    public DiedRequest(String info) {
-        super(RequestCode.DIED);
+    public ImKillRequest(String info) {
+        super(RequestCode.IM_KILL);
         this.killerIp = info;
     }
 

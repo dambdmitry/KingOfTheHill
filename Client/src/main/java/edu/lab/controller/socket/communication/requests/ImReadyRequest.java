@@ -3,8 +3,8 @@ package edu.lab.controller.socket.communication.requests;
 import edu.lab.controller.socket.communication.Request;
 import edu.lab.controller.socket.communication.RequestCode;
 
-public class AgreementRequest extends Request {
-    public AgreementRequest(RequestCode code) {
+public class ImReadyRequest extends Request {
+    public ImReadyRequest(RequestCode code) {
         super(code);
     }
 

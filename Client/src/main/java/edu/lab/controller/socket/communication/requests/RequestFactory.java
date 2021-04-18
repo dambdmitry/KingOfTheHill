@@ -7,7 +7,7 @@ public class RequestFactory {
     public static Request createRequest(RequestCode code){
         switch (code){
             case REMOVE_ME: return new RemoveMeRequest(code);
-            case AGREEMENT: return new AgreementRequest(code);
+            case IM_READY: return new ImReadyRequest(code);
             case GET_TABLE: return new UpdateTableRequest(code);
             default: return null;
         }
@@ -16,7 +16,7 @@ public class RequestFactory {
     public static Request createRequest(RequestCode code, String info){
         switch (code){
             case REGISTRY: return new RegistryRequest(info);
-            case DIED: return new DiedRequest(info);
+            case IM_KILL: return new ImKillRequest(info);
             default: return null;
         }
     }

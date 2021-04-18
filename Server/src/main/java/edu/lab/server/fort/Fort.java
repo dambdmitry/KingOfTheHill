@@ -2,54 +2,63 @@ package edu.lab.server.fort;
 
 import edu.lab.server.Server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.*;
 import java.util.Random;
+import java.util.Scanner;
 
-import static edu.lab.server.Util.getDeathBytes;
 
 public class Fort {
     private Integer port;
     private boolean isAlive;
 
-    private static final Integer defendNumber = new Random(127).nextInt();
+    private final Integer defendNumber;
 
-    public Fort(Integer port){
+    public Fort(Integer port) {
         this.port = port;
         isAlive = true;
+        this.defendNumber = new Random().nextInt(127);
     }
 
-    public void startFight() {
-        try(ServerSocket server = new ServerSocket(port)){
-            while (isAlive){
+    public synchronized void startFight() {
+        System.out.println("Защищаю число " + defendNumber);
+        try (ServerSocket server = new ServerSocket(port)) {
+            while (isAlive) {
+                System.out.println("Жду нападений");
                 Socket socket = server.accept();
-                String shotResult = getShotResult(socket);
-                if (shotResult.equals("D")){
+                InputStream in = socket.getInputStream();
+                OutputStream out = socket.getOutputStream();
+                System.out.println("Кто-то напал");
+                String shotResult = getShotResult(in);
+                System.out.println("Выстрелил на " + shotResult);
+                sendResponse(out, shotResult);
+                System.out.println("Отправил ответ");
+                if (shotResult.equals("D")) {
                     isAlive = false;
-                    sendDeathRattle(getDeathBytes(socket.getInetAddress().toString()));
+                    System.out.println("Я умер");
+                } else {
+                    System.out.println(shotResult + " мимо");
                 }
-                sendResponse(socket, shotResult);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void sendResponse(Socket socket, String shotResult) {
-        try (PrintWriter printWriter = new PrintWriter(socket.getOutputStream());) {
-            printWriter.println(shotResult);
-            printWriter.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("send point went wrong: " + e.getMessage());
-        }
+    private void sendResponse(OutputStream os, String shotResult) {
+        PrintWriter printWriter = new PrintWriter(os);
+        System.out.println("Пишу ответ");
+        printWriter.println(shotResult);
+        printWriter.flush();
     }
 
+    /**
+     * Это задача переложена на оппонента
+     *
+     * @param deathBytes
+     */
     private void sendDeathRattle(byte[] deathBytes) {
-        try (DatagramSocket socket = new DatagramSocket()){
+        try (DatagramSocket socket = new DatagramSocket()) {
             DatagramPacket packet = new DatagramPacket(deathBytes, deathBytes.length);
             socket.connect(InetAddress.getByName("127.0.0.1"), 3333);
             socket.send(packet);
@@ -59,14 +68,10 @@ public class Fort {
         }
     }
 
-    private String getShotResult(Socket socket) {
-        try(InputStreamReader in = new InputStreamReader(socket.getInputStream())){
-            BufferedReader br = new BufferedReader(in);
-            String shot = br.readLine();
-            return getResult(shot);
-        } catch (IOException e) {
-            throw new RuntimeException("get shot went wrong: " + e.getMessage());
-        }
+    private String getShotResult(InputStream is) {
+        Scanner in = new Scanner(is);
+        String shot = in.nextLine();
+        return getResult(shot);
     }
 
     private String getResult(String shot) {
@@ -79,6 +84,6 @@ public class Fort {
     }
 
     private boolean isNeedToAnswer() {
-        return new Random(101).nextInt() < 20;
+        return new Random().nextInt(101) < 20;
     }
 }

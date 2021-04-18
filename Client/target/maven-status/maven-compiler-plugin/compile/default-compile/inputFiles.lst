@@ -6,13 +6,12 @@ C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTh
 C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\communication\requests\RequestFactory.java
 C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\Client.java
 C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\ClientForIgor.java
+C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\server\ServerForIgor.java
 C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\communication\requests\RegistryRequest.java
 C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\communication\RequestCode.java
-C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\communication\requests\AgreementRequest.java
-C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\communication\requests\DiedRequest.java
 C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\config\Config.java
 C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\communication\Request.java
 C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\client\attackers\BelowAttacker.java
-C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\server\ServerForIgorImpl.java
-C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\ServerForIgor.java
+C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\communication\requests\ImReadyRequest.java
 C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\client\attackers\AboveAttacker.java
+C:\Users\Admin\Desktop\3 курс\Сетевые ос\Царь горы\KingOfTheHill\Client\src\main\java\edu\lab\controller\socket\communication\requests\ImKillRequest.java
