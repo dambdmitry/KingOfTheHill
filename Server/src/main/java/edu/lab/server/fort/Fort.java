@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 
-public class Fort {
+public class Fort implements Runnable{
     private Integer port;
     private boolean isAlive;
 
@@ -20,7 +20,8 @@ public class Fort {
         this.defendNumber = new Random().nextInt(127);
     }
 
-    public synchronized void startFight() {
+    @Override
+    public void run() {
         System.out.println("Защищаю число " + defendNumber);
         try (ServerSocket server = new ServerSocket(port)) {
             while (isAlive) {
@@ -43,6 +44,9 @@ public class Fort {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public synchronized void startFight() {
+
     }
 
     private void sendResponse(OutputStream os, String shotResult) {
@@ -86,4 +90,6 @@ public class Fort {
     private boolean isNeedToAnswer() {
         return new Random().nextInt(101) < 20;
     }
+
+
 }
