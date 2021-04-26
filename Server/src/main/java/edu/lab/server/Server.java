@@ -31,11 +31,13 @@ public class Server {
         myAttacker.sendToAttackerList(client.getActualListOfPlayers());
         Fort fort = new Fort(2222);
 
+        Thread listener = new Thread(server);
+        listener.start();
+
         Thread defender = new Thread(fort);
         defender.start();
 
-        Thread listener = new Thread(server);
-        listener.start();
+
 
 
     }

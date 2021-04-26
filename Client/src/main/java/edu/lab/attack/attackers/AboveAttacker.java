@@ -15,17 +15,32 @@ public class AboveAttacker extends Attacker {
 
     @Override
     public void run() {
-        for (int i = MAX_POINT; i > MAX_POINT / 2; i--) {
+        int high = MAX_POINT;
+        int low = MIN_POINT;
+        boolean isEnemyAlive = true;
+        while(isEnemyAlive){
+            long shot = (low + high) / 2;
             try (Socket socket = new Socket(ip, port)) {
                 InputStream in = socket.getInputStream();
                 OutputStream out = socket.getOutputStream();
-                sendPoint(i, out);
-                if (checkAnswer(receiveAnswer(in))){
-                    sendDead(ip);
-                    break;
+                sendPoint((int) shot, out);
+                String result = receiveAnswer(in);
+                switch (result){
+                    case "L" : high = (int) (shot - 1); break;
+                    case "R" : low = (int) (shot + 1); break;
+                    case "D" : {
+                        sendDead(ip);
+                        isEnemyAlive = false;
+                        return; //Лучше ретурнуть
+                    }
+                    case "N" : continue;
+                    default:
+                        System.out.println("Что-то не то мне подсунули: " + shot);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Похоже оппонент " + ip + " умер не от моей руки");
+                System.out.println(e.getMessage());
+                return;
             }
         }
     }

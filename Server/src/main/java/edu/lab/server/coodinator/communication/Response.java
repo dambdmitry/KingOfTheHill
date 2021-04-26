@@ -6,6 +6,15 @@ import java.util.List;
 public abstract class Response {
 
     /**
+     * Метод узнает код запроса
+     * @param packet массив байтов запроса
+     * @return код запроса
+     */
+    public static String getPacketCode(byte[] packet){
+        return packet != null ? packet[0] + "" : "-1";
+    }
+
+    /**
      * Код запроса от сервера Игоря 2
      * 1 байт - код
      * 2 байт - количество участников

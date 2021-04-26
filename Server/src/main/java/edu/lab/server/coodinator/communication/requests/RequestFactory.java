@@ -9,6 +9,7 @@ public class RequestFactory {
             case REMOVE_ME: return new RemoveMeRequest(code);
             case IM_READY: return new ImReadyRequest(code);
             case GET_TABLE: return new UpdateTableRequest(code);
+            case IM_ALIVE: return new ImAliveRequest(code);
             default: return null;
         }
     }

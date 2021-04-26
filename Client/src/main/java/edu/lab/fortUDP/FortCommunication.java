@@ -23,17 +23,21 @@ public class FortCommunication implements Runnable{
 
     @Override
     public void run() {
-        try(DatagramSocket socket = new DatagramSocket(fortPort)){
-            byte[] msg = new byte[255];
-            DatagramPacket packet = new DatagramPacket(msg, msg.length);
-            socket.receive(packet);
-            if((packet.getData()[0] + "").equals("D")){
-                System.out.println("Я умер");
-                System.exit(0);
+        while (true) {
+            System.out.println("Слушаю");
+            try (DatagramSocket socket = new DatagramSocket(fortPort)) {
+                byte[] msg = new byte[255];
+                DatagramPacket packet = new DatagramPacket(msg, msg.length);
+                socket.receive(packet);
+                System.out.println("Получил что-то");
+                if ((packet.getData()[0] + "").equals("13")) {
+                    System.out.println("Я умер");
+                    System.exit(0);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
         }
     }
 

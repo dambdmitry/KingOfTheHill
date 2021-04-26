@@ -12,7 +12,7 @@ import java.util.Scanner;
 public abstract class Attacker implements Runnable {
     protected String ip;
     protected Integer port;
-    protected final static Integer MAX_POINT = 127;
+    protected final static Integer MAX_POINT = Integer.MAX_VALUE;
     protected final static Integer MIN_POINT = 0;
 
     public Attacker(String ip, Integer port) {

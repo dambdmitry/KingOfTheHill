@@ -50,17 +50,20 @@ public class AttackerCommunication implements Runnable{
             DatagramPacket packet = new DatagramPacket(list, list.length);
             socket.connect(InetAddress.getLocalHost(), fortPort);
             socket.send(packet);
+            socket.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void sendToAttackerBadNews(){
-        byte[] badNews = "D".getBytes();
+        byte[] badNews = new byte[255];
+        badNews[0] = 13; //Сообщение о смерти
         try(DatagramSocket socket = new DatagramSocket()){
             DatagramPacket packet = new DatagramPacket(badNews, badNews.length);
             socket.connect(InetAddress.getLocalHost(), fortPort);
             socket.send(packet);
+            socket.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
         }

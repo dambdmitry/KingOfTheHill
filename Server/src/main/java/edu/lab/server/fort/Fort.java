@@ -1,6 +1,7 @@
 package edu.lab.server.fort;
 
 import edu.lab.server.Server;
+import edu.lab.server.myAttacker.AttackerCommunication;
 
 import java.io.*;
 import java.net.*;
@@ -17,15 +18,16 @@ public class Fort implements Runnable{
     public Fort(Integer port) {
         this.port = port;
         isAlive = true;
-        this.defendNumber = new Random().nextInt(127);
+        this.defendNumber = new Random().nextInt(Integer.MAX_VALUE);
     }
 
     @Override
     public void run() {
         System.out.println("Защищаю число " + defendNumber);
+        System.out.println("Жду нападений");
         try (ServerSocket server = new ServerSocket(port)) {
             while (isAlive) {
-                System.out.println("Жду нападений");
+
                 Socket socket = server.accept();
                 InputStream in = socket.getInputStream();
                 OutputStream out = socket.getOutputStream();
@@ -33,20 +35,17 @@ public class Fort implements Runnable{
                 String shotResult = getShotResult(in);
                 System.out.println("Выстрелил на " + shotResult);
                 sendResponse(out, shotResult);
-                System.out.println("Отправил ответ");
                 if (shotResult.equals("D")) {
                     isAlive = false;
                     System.out.println("Я умер");
-                } else {
-                    System.out.println(shotResult + " мимо");
+                    AttackerCommunication.sendToAttackerBadNews();
+                    server.close();
+                    System.exit(0);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    public synchronized void startFight() {
-
     }
 
     private void sendResponse(OutputStream os, String shotResult) {
@@ -54,22 +53,6 @@ public class Fort implements Runnable{
         System.out.println("Пишу ответ");
         printWriter.println(shotResult);
         printWriter.flush();
-    }
-
-    /**
-     * Это задача переложена на оппонента
-     *
-     * @param deathBytes
-     */
-    private void sendDeathRattle(byte[] deathBytes) {
-        try (DatagramSocket socket = new DatagramSocket()) {
-            DatagramPacket packet = new DatagramPacket(deathBytes, deathBytes.length);
-            socket.connect(InetAddress.getByName("127.0.0.1"), 3333);
-            socket.send(packet);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private String getShotResult(InputStream is) {
@@ -82,13 +65,13 @@ public class Fort implements Runnable{
         Integer kick = Integer.parseInt(shot);
         if (kick.equals(defendNumber)) return "D";
         if (isNeedToAnswer()) {
-            return kick < defendNumber ? "L" : "R";
+            return kick < defendNumber ? "R" : "L";
         }
         return "N";
     }
 
     private boolean isNeedToAnswer() {
-        return new Random().nextInt(101) < 20;
+        return new Random().nextInt(101) + 1 < 20;
     }
 
 

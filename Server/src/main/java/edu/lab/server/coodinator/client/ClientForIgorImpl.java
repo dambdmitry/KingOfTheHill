@@ -12,8 +12,9 @@ import java.net.InetAddress;
 
 public class ClientForIgorImpl{
     private static final int MAX_BUFFER_SIZE = 255;
-    private String host;
+
     private static final Integer registryPort = 3333;
+    private String host;
     private final Integer port;
 
     public ClientForIgorImpl(String host, Integer port) {
@@ -30,14 +31,19 @@ public class ClientForIgorImpl{
             System.out.println("Реквест создан");
             socket.connect(InetAddress.getByName(host), registryPort);
             System.out.println("Подключился к Игорю");
+
             DatagramSocket response = new DatagramSocket(port);
             byte[] responseBytes = getBuffer();
             DatagramPacket responsePacket = new DatagramPacket(responseBytes, responseBytes.length);
+
             socket.send(packet);
+            socket.disconnect();
             System.out.println("Запросил таблицу игроков");
             System.out.println("Жду таблицу");
             response.receive(responsePacket);
             System.out.println("Получил таблицу");
+            response.disconnect();
+            response.close();
             return responsePacket.getData();
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -50,15 +56,15 @@ public class ClientForIgorImpl{
             Request registryRequest = RequestFactory.createRequest(RequestCode.REGISTRY, info);
             byte[] msg = registryRequest.getPacket();
             DatagramPacket packet = new DatagramPacket(msg, msg.length);
-            System.out.println("Отправляю");
+            System.out.println("Отправляю запрос на регистрацию...");
             socket.connect(InetAddress.getByName(host), registryPort);
             socket.send(packet);
-            System.out.println("ОТправлено");
+            System.out.println("Отправил!");
             byte[] responseBytes = getBuffer();
             DatagramPacket responsePacket = new DatagramPacket(responseBytes, responseBytes.length);
             socket.disconnect();
             DatagramSocket responseSocket = new DatagramSocket(port);
-            System.out.println("Ждем ответ");
+            System.out.println("Жду ответ...");
             responseSocket.receive(responsePacket);
             String myIp = Response.getMyIp(responsePacket.getData());
             System.out.println("Ответ получен");
@@ -68,26 +74,6 @@ public class ClientForIgorImpl{
 
         } catch (IOException e) {
             throw new RuntimeException("Регистрация не прошла");
-        }
-    }
-
-    public void iKilledThis(String deadIp) {
-        try (DatagramSocket socket = new DatagramSocket()) {
-            Request iKillRequest = RequestFactory.createRequest(RequestCode.IM_KILL, deadIp);
-            byte[] pack = iKillRequest.getPacket();
-            DatagramPacket packet = new DatagramPacket(pack, pack.length);
-            socket.connect(InetAddress.getByName(host), port);
-            socket.send(packet);
-
-            byte[] responseBytes = getBuffer();
-            DatagramPacket responsePacket = new DatagramPacket(responseBytes, responseBytes.length);
-            socket.receive(responsePacket);
-            boolean isMyCode = (responsePacket.getData()[0] + "").equals("3");
-            if (isMyCode) {
-                System.out.println(Response.getIdDead(responsePacket.getData()));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
