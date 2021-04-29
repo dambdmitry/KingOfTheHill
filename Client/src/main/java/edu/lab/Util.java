@@ -7,7 +7,7 @@ public class Util {
     public static List<String> getIpListFromBytes(byte[] bytes){
         List<String> listOfPlayers = new LinkedList<>();
         byte count = bytes[1];
-        if(count < 1){//todo исправить на count < 2
+        if(count < 2){
             return new LinkedList<>();
         }
         for(int i = 2; i < count * 4 + 2; i += 4){
@@ -20,5 +20,15 @@ public class Util {
             listOfPlayers.add(sb.toString());
         }
         return listOfPlayers;
+    }
+
+    public static String getIpFromBytes(byte[] ipBytes){
+        StringBuilder sb = new StringBuilder();
+        sb.append(ipBytes[0]);
+        for(int i = 1; i < ipBytes.length; i++){
+            sb.append(".");
+            sb.append(ipBytes[i]);
+        }
+        return sb.toString();
     }
 }

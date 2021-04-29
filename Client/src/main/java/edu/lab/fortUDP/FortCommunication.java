@@ -52,4 +52,17 @@ public class FortCommunication implements Runnable{
             e.printStackTrace();
         }
     }
+
+    public String receiveIp() {
+        try(DatagramSocket socket = new DatagramSocket(fortPort)){
+            byte[] bytes = new byte[4];
+            DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
+            socket.receive(packet);
+            String myIp = Util.getIpFromBytes(packet.getData());
+            return myIp;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }

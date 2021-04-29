@@ -1,5 +1,5 @@
 edu\lab\attack\Attacker.class
+edu\lab\attack\connectionAttacker\AttackerConnectionTCP.class
 edu\lab\Client.class
 edu\lab\Util.class
 edu\lab\fortUDP\FortCommunication.class
-edu\lab\attack\attackers\AboveAttacker.class

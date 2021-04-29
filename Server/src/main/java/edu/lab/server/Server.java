@@ -20,6 +20,7 @@ public class Server {
         //Форма записи регистрации - строка "password;port;fio"
         String validRegistryString = IGOR_SERVER_PASSWORD + ";" + PORT_TO_IGOR + ";" + FIO;
         String myIp = client.registry(validRegistryString);
+        myAttacker.sendOurIp(myIp);
         System.out.println("Я зарегался, мой ip: " + myIp);
         server.setMyIp(myIp);
         System.out.println("Жду запрос готовности...");

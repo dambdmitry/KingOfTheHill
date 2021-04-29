@@ -47,9 +47,19 @@ public abstract class Response {
      * @param bytes байтовый запрос от Игоря с кодом 3
      * @return строка ip, пример для локалхоста "127.0.0.1"
      */
-    public static String getIdDead(byte[] bytes){
+    public static String getIpDeadFromIgor(byte[] bytes){
         StringBuilder sb = new StringBuilder();
         sb.append(bytes[1]);
+        for(int i = 2; i < 5; i++){
+            sb.append(".");
+            sb.append(bytes[i]);
+        }
+        return sb.toString();
+    }
+
+    public static String getIpDeadFromAttacker(byte[] bytes){
+        StringBuilder sb = new StringBuilder();
+        sb.append(bytes[0]);
         for(int i = 2; i < 5; i++){
             sb.append(".");
             sb.append(bytes[i]);

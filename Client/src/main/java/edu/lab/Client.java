@@ -1,6 +1,6 @@
 package edu.lab;
 
-import edu.lab.attack.attackers.AboveAttacker;
+import edu.lab.attack.Attacker;
 import edu.lab.fortUDP.FortCommunication;
 
 import java.util.List;
@@ -15,17 +15,20 @@ public class Client {
 
     public static void main(String[] args){
         FortCommunication fort = new FortCommunication();
-        List<String> sacrifices = fort.waitAndGetListPlayersFromFort();//Далее замногопоточить дибилов
-        Integer amount = sacrifices.size() * 3;
-        ExecutorService exec = Executors.newFixedThreadPool(amount);
+        String myIp = fort.receiveIp();
+        List<String> sacrifices = fort.waitAndGetListPlayersFromFort();
+        Integer amount = sacrifices.size() * 2;
+        ExecutorService exec = Executors.newFixedThreadPool(amount == 0 ? 1 : amount);
         for (String sacrifice : sacrifices) {
             System.out.println(sacrifice);
         }
         for(String ip : sacrifices){
-            System.out.println("Запускаю псов");
-            exec.execute(new AboveAttacker(ip, port));
-            exec.execute(new AboveAttacker(ip, port));
-            System.out.println("Псы запущены");
+            if (!ip.equals(myIp)) {
+                System.out.println("Запускаю псов на " + ip);
+                exec.execute(new Attacker(ip, port));
+                exec.execute(new Attacker(ip, port));
+                System.out.println("Псы запущены");
+            }
         }
 
         Thread listener = new Thread(fort);

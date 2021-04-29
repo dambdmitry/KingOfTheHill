@@ -22,7 +22,8 @@ public class ImKillRequest extends Request {
     }
 
     private byte[] getIpBytes(String ip){
-        byte[] ipBytes = new byte[4];
+        byte[] ipBytes = new byte[5];
+        ipBytes[0] = requestCode;
         String[] split = ip.split("\\.");
         for(int i = 0; i < ipBytes.length; i++){
             byte oneByte = (byte) Integer.parseInt(split[i]);

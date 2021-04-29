@@ -1,57 +1,49 @@
 package edu.lab.attack;
 
 
-import edu.lab.fortUDP.FortCommunication;
+import edu.lab.attack.connectionAttacker.AttackerConnectionTCP;
 
-import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.Scanner;
+import java.io.IOException;
 
-public abstract class Attacker implements Runnable {
-    protected String ip;
-    protected Integer port;
-    protected final static Integer MAX_POINT = Integer.MAX_VALUE;
-    protected final static Integer MIN_POINT = 0;
+public class Attacker implements Runnable {
+
+    private final static Integer MAX_POINT = Integer.MAX_VALUE;
+    private final static Integer MIN_POINT = 0;
+    private String ip;
+    private Integer port;
 
     public Attacker(String ip, Integer port) {
         this.ip = ip;
         this.port = port;
     }
 
-    /**
-     * @param receiveAnswer ответ
-     * @return тру если убил
-     * остальное не надо
-     */
-    protected boolean checkAnswer(String receiveAnswer) {
-        return receiveAnswer.equals("D");
-    }
-
-    protected void sendPoint(Integer point, OutputStream os) {
-        PrintWriter printWriter = new PrintWriter(os);
-        System.out.println("Атакую жертву " + point);
-        printWriter.println(point);
-        printWriter.flush();
-    }
-
-    protected String receiveAnswer(InputStream is) {
-        Scanner in = new Scanner(is);
-        String answer = "";
-        if(in.hasNext()) {
-            answer = in.nextLine();
-        }
-        while (answer == null || answer.equals("")) {
-            if(in.hasNext()) {
-                answer = in.nextLine();
+    @Override
+    public void run() {
+        long high = MAX_POINT;
+        long low = MIN_POINT;
+        boolean isEnemyAlive = true;
+        while(isEnemyAlive){
+            long shot = (low + high) / 2;
+            try (AttackerConnectionTCP connection = new AttackerConnectionTCP(ip, port)) {
+                connection.sendShot(shot);
+                String shotResult = connection.receiveResult();
+                switch (shotResult){
+                    case "L" : high = (shot - 1); break;
+                    case "R" : low = (shot + 1); break;
+                    case "D" : {
+                        System.out.println("Я УБИЛ " + ip);
+                        connection.sendDead();
+                        isEnemyAlive = false;
+                        break;
+                    }
+                    case "N" : break;
+                    default:
+                        System.out.println("Что-то не то мне подсунули: " + shot);
+                }
+            } catch (IOException e) {
+                System.out.println("Не удалось подключиться к " + ip);
+                e.printStackTrace();
             }
         }
-        return answer;
     }
-
-    protected void sendDead(String ip){
-        FortCommunication.sendImaKiller(ip);
-    }
-
 }

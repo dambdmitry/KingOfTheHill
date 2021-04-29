@@ -13,7 +13,7 @@ public class Fort implements Runnable{
     private Integer port;
     private boolean isAlive;
 
-    private final Integer defendNumber;
+    private final long defendNumber;
 
     public Fort(Integer port) {
         this.port = port;
@@ -42,6 +42,9 @@ public class Fort implements Runnable{
                     server.close();
                     System.exit(0);
                 }
+                in.close();
+                out.close();
+                socket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -57,12 +60,21 @@ public class Fort implements Runnable{
 
     private String getShotResult(InputStream is) {
         Scanner in = new Scanner(is);
-        String shot = in.nextLine();
+        String shot = "";
+        if(in.hasNext()) {
+            shot = in.nextLine();
+        }
+        while (shot == null || shot.equals("")){
+            if (in.hasNext()){
+                shot = in.nextLine();
+            }
+        }
+        System.out.println("Пришел выстрел на " + shot);
         return getResult(shot);
     }
 
     private String getResult(String shot) {
-        Integer kick = Integer.parseInt(shot);
+        Long kick = Long.parseLong(shot);
         if (kick.equals(defendNumber)) return "D";
         if (isNeedToAnswer()) {
             return kick < defendNumber ? "R" : "L";

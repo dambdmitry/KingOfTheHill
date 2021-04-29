@@ -51,7 +51,7 @@ public class ServerForIgor implements Runnable {
                 String code = Response.getPacketCode(pack);
                 server.disconnect();
                 if(code.equals(DEAD_CODE)){
-                    String deadIp = Response.getIdDead(pack);
+                    String deadIp = Response.getIpDeadFromIgor(pack);
                     if(deadIp.equals(myIp)){
                         System.out.println("Я умер");
                         AttackerCommunication.sendToAttackerBadNews();
